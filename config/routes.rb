@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 
   resources :orders, only: [:create, :show]
 
+  resources :line_items, only: [:show]
+
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'
   get '/logout' => 'sessions#destroy'
