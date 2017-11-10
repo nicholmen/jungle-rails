@@ -1,0 +1,9 @@
+Thanks for choosing Jungle
+
+Your purchase cost <%= @order.total_cents %> cents.
+
+Have a great day!
+
+<% @order.line_items.each do |line_item| %>
+<%= line_item.product.name %>
+<% end %>

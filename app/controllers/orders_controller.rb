@@ -7,15 +7,15 @@ class OrdersController < ApplicationController
 
   def create
     charge = perform_stripe_charge
-    order  = create_order(charge)
+    @order  = create_order(charge)
 
-    if order.valid?
+    if @order.valid?
       
       empty_cart!
-      redirect_to order, notice: 'Your Order has been placed.'
+      redirect_to @order, notice: 'Your Order has been placed.'
     
     else
-      redirect_to cart_path, flash: { error: order.errors.full_messages.first }
+      redirect_to cart_path, flash: { error: @order.errors.full_messages.first }
     end
 
   rescue Stripe::CardError => e
@@ -39,7 +39,7 @@ class OrdersController < ApplicationController
   end
 
   def create_order(stripe_charge)
-    order = Order.new(
+    @order = Order.new(
       email: params[:stripeEmail],
       total_cents: cart_total,
       stripe_charge_id: stripe_charge.id, # returned by stripe
@@ -47,7 +47,7 @@ class OrdersController < ApplicationController
     cart.each do |product_id, details|
       if product = Product.find_by(id: product_id)
         quantity = details['quantity'].to_i
-        order.line_items.new(
+        @order.line_items.new(
           product: product,
           quantity: quantity,
           item_price: product.price,
@@ -55,9 +55,9 @@ class OrdersController < ApplicationController
         )
       end
     end
-    order.save!
-    UserMailer.welcome_email(order).deliver_now
-    order
+    @order.save!
+    ReceiptMailer.receipt_email(@order).deliver_now
+    @order
   end
 
   # returns total in cents not dollars (stripe uses cents as well)
