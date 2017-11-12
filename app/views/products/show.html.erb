@@ -26,6 +26,35 @@
       </div>
     </div>
 
+
+    <div class="row">
+
+      <h3>Reviews</h3>
+      
+      <% if user_logged_in? %>
+
+        <h5>New Review</h5>
+        <%= form_for :review, url: product_reviews_path(@product.id), method: :POST do |f| %>
+          <div> <%= f.text_area :description %> </div>
+          <div><%= f.select :rating, [['1 - horrible', 1], ['2 - poor', 2], ['3 - mediocre', 3], ['4 - good', 4], ['5 - great', 5]] %></div>
+          <div><%= f.submit "Create" %></div>
+        <% end %>
+      <% end %>  
+
+      </br>
+      
+      <% @product.reviews.reverse_each do |review| %>
+        
+        <div> User: <%= review.user.name  %></div>
+        <div> Description: <%= review.description %> </div>
+        <div> Rating: <%= review.rating %> </div>
+        <% if current_user && (current_user.id == review.user_id) %>
+        <div> <%= link_to 'Delete Comment', product_review_path(@product, review), method: :delete, data: { confirm: 'Are you sure?' } %> </div>
+        <% end %>
+        </br>
+      <% end %>
+    
+    </div>
   </article>
 
 </section>

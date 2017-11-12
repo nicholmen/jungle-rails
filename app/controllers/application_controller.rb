@@ -12,6 +12,11 @@ class ApplicationController < ActionController::Base
     redirect_to '/login' unless current_user
   end
 
+  def user_logged_in?
+    !!session[:user_id]
+  end
+  helper_method :user_logged_in?
+
   private
 
   def cart
