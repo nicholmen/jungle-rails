@@ -23,7 +23,7 @@ RSpec.describe Product, type: :model do
       @product.price_cents = nil
       expect(@product).not_to be_valid
       expect(@product.errors.full_messages.length).to be >= 0
-      puts @product.errors.full_messages
+      # puts @product.errors.full_messages
       
     end
     
