@@ -1,9 +1,12 @@
+## bin/rails s -b 0.0.0.0
+
 require 'rails_helper'
 
-RSpec.feature "Visitor navigates to a product detail page", type: :feature, js: true do
+RSpec.feature "Visitor can add a product on the home page to their cart", type: :feature, js: true do
   before :each do
     @category = Category.create! name: 'Apparel'
 
+   
       @product = @category.products.create!(
         name:  Faker::Hipster.sentence(3),
         description: Faker::Hipster.paragraph(4),
@@ -14,22 +17,18 @@ RSpec.feature "Visitor navigates to a product detail page", type: :feature, js: 
     end
   
 
-  scenario "they click on a product" do
+  scenario "they click the add cart button for a product and their cart increases" do
 
     visit root_path
 
     puts page.html
 
-    # first('footer').click_link('details-button')
-    # click_link('Details &raquo;')
-    first('.product-image').click
+    first('.add-button').click
 
-    expect(page).to have_current_path(product_path @product.id)
-    # expect(page).to have_current_path(product_path (@product.id))
+    sleep(6)
+
+    expect(page).to have_link("My Cart (1)")
     
-
     save_screenshot
   end
-
-
 end
